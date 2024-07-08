@@ -89,7 +89,7 @@ class DataLoader(data.Dataset):
     def __len__(self):
         return len(self.index_samples)
 
-class ahjang_dataloader(DataLoader):
+class DADFSM_loader(DataLoader):
     def __init__(self,segmented_video_folder,video_folder, transform, resize_height, resize_width, time_step=4, num_pred=1):
         self.seg_dir = segmented_video_folder
         self.segmented_frames = []

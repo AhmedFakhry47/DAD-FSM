@@ -1,5 +1,5 @@
 from utils import setup_device, accuracy, MetricTracker, TensorboardWriter
-from data_utils import DataLoader,ahjang_dataloader
+from data_utils import DataLoader,DADFSM_loader
 import torchvision.transforms as transforms
 from checkpoint import load_checkpoint
 from torch.autograd import Variable
@@ -69,7 +69,7 @@ def test_all_scenes(model, seg_path,test_path, config, device=None):
         print('------------------------------------------------------------------------------------------------------')
         print('Number of video:', idx_video+1)
         losses_curr_video = []
-        test_dataset = ahjang_dataloader(seg_scenes[idx_video],path_scene, transforms.Compose([
+        test_dataset = DADFSM_loader(seg_scenes[idx_video],path_scene, transforms.Compose([
                 transforms.ToTensor(),
                 ]), resize_height=config.image_size, resize_width=config.image_size)
 
@@ -96,7 +96,7 @@ def test_all_scenes(model, seg_path,test_path, config, device=None):
     list_np_labels = np.concatenate(list_np_labels)
     loss_all = np.mean(losses)
     print("threshold:", np.mean(losses) + np.std(losses))
-    frame_auc = roc_afuc_score(y_true=list_np_labels, y_score=losses)
+    frame_auc = roc_auc_score(y_true=list_np_labels, y_score=losses)
     print("Evaluation results:, AUC@1: {:.2f} - Mean loss: {:.2f}".format(frame_auc, loss_all))
     return frame_auc
 
@@ -152,7 +152,7 @@ def main():
         seg_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_Anomaly_seg_order/Bike Roundabout/train/frames/"
 
         print(os.listdir(train_folder))
-        train_dataset = ahjang_dataloader(seg_folder,train_folder, transforms.Compose([
+        train_dataset = DADFSM_loader(seg_folder,train_folder, transforms.Compose([
                 transforms.ToTensor(),
                 ]), resize_height=config.image_size, resize_width=config.image_size)
 
@@ -164,7 +164,7 @@ def main():
         test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Bike Roundabout/test/frames/" 
         seg_test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_Anomaly_seg_order/Bike Roundabout/test/frames/"
 
-        test_dataset = ahjang_dataloader(seg_test_folder,test_folder, transforms.Compose([
+        test_dataset = DADFSM_loader(seg_test_folder,test_folder, transforms.Compose([
                 transforms.ToTensor(),
                 ]), resize_height=config.image_size, resize_width=config.image_size)
 
