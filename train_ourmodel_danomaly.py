@@ -4,7 +4,7 @@ import torchvision.transforms as transforms
 from checkpoint import load_checkpoint
 from torch.autograd import Variable
 from config import get_train_config
-from our_model import ahjang_model
+from our_model import DADFSM
 import torch.utils.data as data
 from sklearn.metrics import *
 from data_loaders import *
@@ -96,7 +96,7 @@ def test_all_scenes(model, seg_path,test_path, config, device=None):
     list_np_labels = np.concatenate(list_np_labels)
     loss_all = np.mean(losses)
     print("threshold:", np.mean(losses) + np.std(losses))
-    frame_auc = roc_auc_score(y_true=list_np_labels, y_score=losses)
+    frame_auc = roc_afuc_score(y_true=list_np_labels, y_score=losses)
     print("Evaluation results:, AUC@1: {:.2f} - Mean loss: {:.2f}".format(frame_auc, loss_all))
     return frame_auc
 
@@ -141,7 +141,7 @@ def main():
     # create model
     print("create model")
     args = trainingargs()
-    model = ahjang_model(args)
+    model = DADFSM(args)
 
     # send model to device
     model = model.to(device)
