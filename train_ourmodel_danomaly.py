@@ -18,7 +18,7 @@ import pdb
 import glob
 
 
-save_path = 'Drone_anomaly_results/Bike Roundabout/'
+save_path = 'Drone_anomaly_results/Crossroads/'
 if not os.path.exists(save_path):
     os.mkdir(save_path)
 
@@ -63,7 +63,7 @@ def test_all_scenes(model, test_path,seg_path, config, device=None):
     seg_scenes = glob.glob(os.path.join(seg_path, '*'))
 
 
-    path_labels = '/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Bike Roundabout/label'
+    path_labels = '/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Crossroads/label'
     list_np_labels = []
 
     losses = []
@@ -150,8 +150,8 @@ def main():
     os.makedirs('./' + save_path + '/checkpoints', exist_ok=True)
     if bool(config.train):
         # Loading dataset
-        train_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Bike Roundabout/train/frames/" 
-        seg_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_seg_order/Bike Roundabout/train/frames/"
+        train_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Crossroads/train/frames/" 
+        seg_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_seg_order/Crossroads/train/frames/"
 
 
 
@@ -165,8 +165,8 @@ def main():
         train_batch = data.DataLoader(train_dataset, batch_size=config.batch_size,
                                     shuffle=False, num_workers=4, drop_last=True)
 
-        test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Bike Roundabout/test/frames/" 
-        seg_test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_seg_order/Bike Roundabout/test/frames/"
+        test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Crossroads/test/frames/" 
+        seg_test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_seg_order/Crossroads/test/frames/"
 
         test_dataset = DADFSM_loader(test_folder,seg_test_folder, transforms.Compose([
                 transforms.ToTensor(),
@@ -215,8 +215,8 @@ def main():
 
                 model.eval()
 
-                test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Bike Roundabout/test/frames" 
-                seg_folder  = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_seg_order/Bike Roundabout/test/frames"
+                test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Crossroads/test/frames" 
+                seg_folder  = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_seg_order/Crossroads/test/frames"
                 test_all_scenes(model, test_folder, seg_folder, config, device='cuda')
             else:
                 save_model(save_path + '/checkpoints/' , epoch, model, optimizer, lr_scheduler, device_ids, True)
@@ -236,8 +236,8 @@ def main():
     
     else:
         print('Testing ...')
-        test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Bike Roundabout/test/frames" 
-        seg_folder  = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_seg_order/Bike Roundabout/test/frames"
+        test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Crossroads/test/frames" 
+        seg_folder  = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_seg_order/Crossroads/test/frames"
         test_all_scenes(model, test_folder,seg_folder,config, device='cuda')
 
 if __name__ == '__main__':
