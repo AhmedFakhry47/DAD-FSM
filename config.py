@@ -26,7 +26,7 @@ def get_train_config():
     config = parser.parse_args()
 
     # model config
-    config = eval("get_{}_config".format(config.model_arch))(config)
+    #config = eval("get_{}_config".format(config.model_arch))(config)
     process_config(config)
     print_config(config)
     return config

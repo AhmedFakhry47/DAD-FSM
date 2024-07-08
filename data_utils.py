@@ -49,19 +49,20 @@ class DataLoader(data.Dataset):
         self.setup()
 
     def setup(self):
+        print(self.dir)
         videos = glob.glob(os.path.join(self.dir, '*'))
         videos.sort()
         if os.path.isdir(videos[0]):
             all_video_frames = []
             for video in videos:
-                vide_frames = glob.glob(os.path.join(video, '*.png')) #change to jpg later
-                vide_frames.sort(key=lambda x: int(os.path.basename(x).split('.')[0].split('_')[1])) # 0->-1 later .split('_')[0]
+                vide_frames = glob.glob(os.path.join(video, '*.jpg')) #change to jpg later
+                vide_frames.sort(key=lambda x: int(os.path.basename(x).split('.')[0])) #.split('_')[1]) # 0->-1 later .split('_')[0]
                 if len(all_video_frames) == 0:
                     all_video_frames = vide_frames
                 else:
                     all_video_frames += vide_frames
         else:
-            videos.sort(key=lambda x: int(os.path.basename(x).split('.')[0].split('_')[1])) # 0 -> -1 later .split('_')[0]
+            videos.sort(key=lambda x: int(os.path.basename(x).split('.')[0])) #.split('_')[1] # 0 -> -1 later .split('_')[0]
             all_video_frames = videos
         
         self.video_frames = all_video_frames
@@ -90,7 +91,7 @@ class DataLoader(data.Dataset):
         return len(self.index_samples)
 
 class DADFSM_loader(DataLoader):
-    def __init__(self,segmented_video_folder,video_folder, transform, resize_height, resize_width, time_step=4, num_pred=1):
+    def __init__(self,video_folder,segmented_video_folder, transform, resize_height, resize_width, time_step=4, num_pred=1):
         self.seg_dir = segmented_video_folder
         self.segmented_frames = []
         self.segmented_index  = []

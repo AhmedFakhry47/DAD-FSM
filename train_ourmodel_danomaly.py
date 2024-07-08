@@ -52,14 +52,16 @@ def train_epoch(epoch, model, data_loader, criterion, optimizer, lr_scheduler, m
 
 
 
-def test_all_scenes(model, seg_path,test_path, config, device=None):
+def test_all_scenes(model, test_path,seg_path, config, device=None):
     path_ckpt = './' + save_path + 'checkpoints/best.pth'
     checkpoint = torch.load(path_ckpt)
     print('Path checkpoint:', path_ckpt)
     model.load_state_dict(checkpoint['state_dict'])
     model.eval()
-    seg_scenes = glob.glob(os.path.join(seg_path, 'frames/*'))
-    path_scenes = glob.glob(os.path.join(test_path, 'frames/*'))
+
+    path_scenes = glob.glob(os.path.join(test_path, '*'))
+    seg_scenes = glob.glob(os.path.join(seg_path, '*'))
+
 
     path_labels = '/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Bike Roundabout/label'
     list_np_labels = []
@@ -69,7 +71,7 @@ def test_all_scenes(model, seg_path,test_path, config, device=None):
         print('------------------------------------------------------------------------------------------------------')
         print('Number of video:', idx_video+1)
         losses_curr_video = []
-        test_dataset = DADFSM_loader(seg_scenes[idx_video],path_scene, transforms.Compose([
+        test_dataset = DADFSM_loader(path_scene,seg_scenes[idx_video], transforms.Compose([
                 transforms.ToTensor(),
                 ]), resize_height=config.image_size, resize_width=config.image_size)
 
@@ -78,7 +80,7 @@ def test_all_scenes(model, seg_path,test_path, config, device=None):
         test_batch = data.DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers=4, drop_last=True)
         
         np_label = np.load(os.path.join(path_labels, path_scene.split('/')[-1] + '.npy'), allow_pickle=True)
-        #print(np_label)
+        print(np_label)
         with torch.no_grad():
             with tqdm(desc='Evaluating ' + path_scene.split('/')[-1], unit='it', total=len(test_batch)) as pbar:
                 for batch_idx, (batch_data) in enumerate(test_batch):
@@ -149,22 +151,24 @@ def main():
     if bool(config.train):
         # Loading dataset
         train_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Bike Roundabout/train/frames/" 
-        seg_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_Anomaly_seg_order/Bike Roundabout/train/frames/"
+        seg_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_seg_order/Bike Roundabout/train/frames/"
+
+
 
         print(os.listdir(train_folder))
-        train_dataset = DADFSM_loader(seg_folder,train_folder, transforms.Compose([
+        train_dataset = DADFSM_loader(train_folder,seg_folder, transforms.Compose([
                 transforms.ToTensor(),
                 ]), resize_height=config.image_size, resize_width=config.image_size)
 
         train_size = len(train_dataset)
         print('train size: %d' % train_size)
         train_batch = data.DataLoader(train_dataset, batch_size=config.batch_size,
-                                    shuffle=True, num_workers=4, drop_last=True)
+                                    shuffle=False, num_workers=4, drop_last=True)
 
         test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Bike Roundabout/test/frames/" 
-        seg_test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_Anomaly_seg_order/Bike Roundabout/test/frames/"
+        seg_test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_seg_order/Bike Roundabout/test/frames/"
 
-        test_dataset = DADFSM_loader(seg_test_folder,test_folder, transforms.Compose([
+        test_dataset = DADFSM_loader(test_folder,seg_test_folder, transforms.Compose([
                 transforms.ToTensor(),
                 ]), resize_height=config.image_size, resize_width=config.image_size)
 
@@ -211,9 +215,9 @@ def main():
 
                 model.eval()
 
-                test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Bike Roundabout/test" 
-                seg_folder  = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_Anomaly_seg_order/Bike Roundabout/test"
-                test_all_scenes(model, seg_folder,test_folder, config, device='cuda')
+                test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Bike Roundabout/test/frames" 
+                seg_folder  = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_seg_order/Bike Roundabout/test/frames"
+                test_all_scenes(model, test_folder, seg_folder, config, device='cuda')
             else:
                 save_model(save_path + '/checkpoints/' , epoch, model, optimizer, lr_scheduler, device_ids, True)
 
@@ -232,9 +236,9 @@ def main():
     
     else:
         print('Testing ...')
-        test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Bike Roundabout/test/" 
-        seg_folder  = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_Anomaly_seg_order/Bike Roundabout/test/"
-        test_all_scenes(model, seg_folder,test_folder, config, device='cuda')
+        test_folder = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_order/Bike Roundabout/test/frames" 
+        seg_folder  = "/media/elnaggar/4390958e-5b2c-4102-a19e-f2765e318006/Drone_anomaly_seg_order/Bike Roundabout/test/frames"
+        test_all_scenes(model, test_folder,seg_folder,config, device='cuda')
 
 if __name__ == '__main__':
     main()
