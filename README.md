@@ -6,9 +6,13 @@ In traffic surveillance, accurate video anomaly detection is vital for public sa
 
 ### Table 2: Comparison of methods on two major drone anomaly datasets, UIT-ADrone and Drone-Anomaly.
 
-```markdown
-| Method   |          UIT-ADrone        |        Drone-Anomaly        |
-|----------|----------------------------|-----------------------------|
-|          | AUC ↑         | EER ↓      | mAUC ↑         | mEER ↓     |
-| DAD-FSM  | 68.13         | 0.34       | 73.51          | 0.30       |
-```
+| Method   | UIT-ADrone |      | Drone-Anomaly |      |
+|----------|------------|------|---------------|------|
+|          | AUC ↑      | EER ↓| mAUC ↑        | mEER ↓|
+| FFP      | 53.56      | 0.47 | 57.94         | 0.43 |
+| STD      | 57.05      | 0.45 | 52.64         | 0.47 |
+| MNAD     | 55.88      | 0.46 | 52.34         | 0.51 |
+| MLEP     | 51.55      | 0.47 | 55.00         | 0.48 |
+| ANDT     | 60.50      | 0.42 | 63.05         | 0.43 |
+| ASTT     | 65.45      | 0.39 | 67.80         | 0.36 |
+| DAD-FSM  | 68.13      | 0.34 | 73.51         | 0.30 |
